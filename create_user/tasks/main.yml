@@ -1,0 +1,37 @@
+---
+- name: Print vars
+  ansible.builtin.debug:
+    msg: Username - {{ item.name }}, key - {{ item.key }}
+  with_items: "{{ users }}"
+
+- name: Create users
+  user:
+    name: "{{ item.name }}"
+    comment: 'Created by Ansible'
+    state: "{{ item.state | default('present') }}"
+    remove: yes
+  with_items: "{{ users }}"
+  register: created
+
+- name: Add public key
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.key }}"
+  when: item.state == "present"
+  with_items: "{{ users }}"
+
+- name: Add sudoers
+  template:
+    src: templates/sudoers.j2
+    dest: "/etc/sudoers.d/{{ item.name }}-sudoers"
+    validate: 'visudo -cf %s'
+    mode: 0440
+  when: item.state == "present" and not ansible_check_mode
+  with_items: "{{ users }}"
+
+- name: Remove empty sudoer files
+  file:
+    path: "/etc/sudoers.d/{{ item.name }}-sudoers"
+    state: absent
+  when: item.state != "present"
+  with_items: "{{ users }}"

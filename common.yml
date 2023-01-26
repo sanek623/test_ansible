@@ -1,0 +1,13 @@
+---
+- hosts: main_docker
+  #become: true
+  gather_facts: yes
+  #become_method: sudo
+  #become_flags: "-i"
+  tasks:
+    - import_role:
+        name: create_user
+          #  vars_files:
+    #- "group_vars/common_sber.yml"
+    #- "group_vars/{{ file }}"
+    #- "group_vars/{{ file }}"

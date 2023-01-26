@@ -1,0 +1,6 @@
+---
+users:
+  - name: sanek
+    sudo: yes
+    state: present
+    key: 

@@ -1,0 +1,8 @@
+[main_docker]
+192.168.5.115
+
+[main_docker:vars]
+ansible_ssh_user=root
+ansible_ssh_pass=Nthvbyfnjh_3000
+host_key_checking=False
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
